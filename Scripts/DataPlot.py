@@ -48,6 +48,10 @@ fig_x,fig_y=360.5,358.5
 files=listdir(dir);files=np.sort(files)
 #<-------------------------Lectura de la imagen------------------->
 map=plt.imread("../Graphics/map2.png")
+month_name=["Junio","Julio","Agosto"]
+n_data=np.size(files)
+sum_t=np.zeros(n_data);date_data=[]
+k=0
 for file in files:
     lat,lon=np.loadtxt(dir+file,delimiter=",",skiprows=1,usecols=[0,1],unpack=True)
     #<------------------------Valores iniciales de la localizacion------------------->
@@ -67,6 +71,14 @@ for file in files:
                 if r_lat-dg<lat[i]<r_lat and r_lon-dg<lon[i]<r_lon:
                     count[dlon,dlat]+=1
     sum=np.sum(count)
+    if k!=0:
+        sum_t[k]=sum_t[k-1]+sum
+    else:
+        sum_t[k]=sum
+    print
+    if k%5==0:
+        date_data=np.append(date_data,str(days)+"-"+month_name[month-6])
+    k+=1
     #<-------------------Traslacion de los puntos------------------------------->
     lon,lat,lon_i,lat_i=tras(lon,lat,lon_i,lat_i,fig_x,fig_y,n)
     for dlon in range(n_dlon):
@@ -97,3 +109,9 @@ duration = 0.5
 filenames = sorted(filter(os.path.isfile, [x for x in os.listdir() if x.endswith(".png")]), key=lambda p: os.path.exists(p) and os.stat(p).st_mtime or time.mktime(datetime.now().timetuple()))
 create_gif(filenames, duration)
 os.system("rm *.png")
+plt.subplots_adjust(left=0.125,right=0.9,bottom=0.183,top=0.92)
+plt.plot(np.arange(n_data),sum_t,color="red")
+plt.ylabel("Número de incendios acumulados")
+plt.xticks(np.arange(0,n_data,5),date_data,rotation=90)
+plt.ylim(0,5500)
+plt.show()
