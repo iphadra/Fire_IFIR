@@ -22,7 +22,7 @@ def create_gif(filenames, duration):
 	images = []
 	for filename in filenames:
 		images.append(imageio.imread(filename))
-	output_file='Animation.gif'
+	output_file='../Graphics/Fire.gif'
 	imageio.mimsave(output_file, images, duration=duration)
 #<---------------------Funcion para trasladar las posiciones--------------------->
 def tras(lon,lat,lon_i,lat_i,fig_x,fig_y,n):
@@ -59,7 +59,6 @@ for file in files:
     n_dlon=delimiter(lon_i,dg);n_dlat=delimiter(lat_i,dg)
     day=int(file[42:45])
     year,month,days=date(day)
-    print(year,month,days)
     n=np.size(lat)
     count=np.zeros([n_dlon,n_dlat],dtype=int)
     for dlon in range(n_dlon):
@@ -114,4 +113,6 @@ plt.plot(np.arange(n_data),sum_t,color="red")
 plt.ylabel("Número de incendios acumulados")
 plt.xticks(np.arange(0,n_data,5),date_data,rotation=90)
 plt.ylim(0,5500)
-plt.show()
+plt.yticks(np.arange(0,5500+500,500))
+plt.grid(ls="--")
+plt.savefig("../Graphics/NIA.png")
