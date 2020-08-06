@@ -57,7 +57,7 @@ for file in files:
     #<------------------------Valores iniciales de la localizacion------------------->
     lon_i=[-61,-60];lat_i=[-33.5,-32.5];dg=0.25
     n_dlon=delimiter(lon_i,dg);n_dlat=delimiter(lat_i,dg)
-    day=int(file[42:45])
+    day=int(file[42:45])-1
     year,month,days=date(day)
     n=np.size(lat)
     count=np.zeros([n_dlon,n_dlat],dtype=int)
@@ -74,7 +74,7 @@ for file in files:
         sum_t[k]=sum_t[k-1]+sum
     else:
         sum_t[k]=sum
-    print
+    print(sum,days,month)
     if k%5==0:
         date_data=np.append(date_data,str(days)+"-"+month_name[month-6])
     k+=1
@@ -113,6 +113,6 @@ plt.plot(np.arange(n_data),sum_t,color="red")
 plt.ylabel("Número de incendios acumulados")
 plt.xticks(np.arange(0,n_data,5),date_data,rotation=90)
 plt.ylim(0,5500)
-plt.yticks(np.arange(0,5500+500,500))
+plt.yticks(np.arange(0,6200+500,500))
 plt.grid(ls="--")
 plt.savefig("../Graphics/NIA.png")
