@@ -74,7 +74,6 @@ for file in files:
         sum_t[k]=sum_t[k-1]+sum
     else:
         sum_t[k]=sum
-    print(sum,days,month)
     if k%5==0:
         date_data=np.append(date_data,str(days)+"-"+month_name[month-6])
     k+=1
