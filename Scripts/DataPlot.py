@@ -46,12 +46,15 @@ dir="../FIRMS/viirs/South_America/"
 #<----------------------Dimensiones de la imagen-------------------->
 fig_x,fig_y=360.5,358.5
 files=listdir(dir);files=np.sort(files)
+day_part=5
 #<-------------------------Lectura de la imagen------------------->
 map=plt.imread("../Graphics/map2.png")
 month_name=["Junio","Julio","Agosto"]
 n_data=np.size(files)
+res=n_data%day_part
 sum_t=np.zeros(n_data);date_data=[]
 k=0
+print("Calculando suma de incendios")
 for file in files:
     lat,lon=np.loadtxt(dir+file,delimiter=",",skiprows=1,usecols=[0,1],unpack=True)
     #<------------------------Valores iniciales de la localizacion------------------->
@@ -74,8 +77,8 @@ for file in files:
         sum_t[k]=sum_t[k-1]+sum
     else:
         sum_t[k]=sum
-    if k%5==0:
-        date_data=np.append(date_data,str(days)+"-"+month_name[month-6])
+    if (k+res)%day_part==0:
+        date_data=np.append(date_data,str(days+1)+"-"+month_name[month-6])
     k+=1
     #<-------------------Traslacion de los puntos------------------------------->
     lon,lat,lon_i,lat_i=tras(lon,lat,lon_i,lat_i,fig_x,fig_y,n)
@@ -102,16 +105,19 @@ for file in files:
     plt.ylim(lat_i[0],lat_i[1])
     plt.savefig(str(day)+".png")
     plt.clf()
+print("Creando gif")
 script = sys.argv.pop(0)
 duration = 0.5
 filenames = sorted(filter(os.path.isfile, [x for x in os.listdir() if x.endswith(".png")]), key=lambda p: os.path.exists(p) and os.stat(p).st_mtime or time.mktime(datetime.now().timetuple()))
 create_gif(filenames, duration)
 os.system("rm *.png")
+print("Creando grafica de incencios acumulados")
 plt.subplots_adjust(left=0.125,right=0.9,bottom=0.183,top=0.92)
 plt.plot(np.arange(n_data),sum_t,color="red")
 plt.ylabel("Número de incendios acumulados")
-plt.xticks(np.arange(0,n_data,5),date_data,rotation=90)
-plt.ylim(0,5500)
-plt.yticks(np.arange(0,6200+500,500))
+plt.xticks(np.arange(res,n_data+res,day_part),date_data,rotation=90)
+limy=7500
+plt.ylim(0,limy)
+plt.yticks(np.arange(0,limy+500,500))
 plt.grid(ls="--")
 plt.savefig("../Graphics/NIA.png")
