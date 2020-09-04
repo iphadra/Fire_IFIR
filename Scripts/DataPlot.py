@@ -41,13 +41,15 @@ def redef(lon,lon_i,fig_x,n):
         lon_i[1]=lon_i[0]
         lon_i[0]=aux
     return lon,lon_i
-data_sets=["viirs","suomi"]
-loc_dates=[[42,45],[49,52]]
+#data_sets=["viirs","suomi"]
+#loc_dates=[[42,45],[49,52]]
+data_sets=["suomi"]
+loc_dates=[[49,52]]
 conf_names=["low","nominal","high"]
 cont_conf=np.zeros(3)
 #<-------------------------Lectura de la imagen------------------->
 map=plt.imread("../Graphics/map2.png")
-month_name=["Junio","Julio","Agosto"]
+month_name=["Jun","Jul","Ag","Sept"]
 day_part=5
 #<----------------------Dimensiones de la imagen-------------------->
 fig_x,fig_y=360.5,358.5
@@ -128,10 +130,11 @@ for data_set,loc_date in zip(data_sets,loc_dates):
     plt.subplots_adjust(left=0.125,right=0.9,bottom=0.183,top=0.92)
     plt.plot(np.arange(n_data),sum_t,color="red")
     plt.ylabel("Número de incendios acumulados")
+    plt.xlim(0,date_day[-1])
     plt.xticks(date_day,date_data,rotation=90)
-    limy=8000
+    limy=(int((sum_t[n_data-1])/500)+1)*500
     plt.ylim(0,limy)
-    plt.yticks(np.arange(0,limy+500,500))
+    plt.yticks(np.arange(0,limy+750,750))
     plt.grid(ls="--")
     plt.savefig("../Graphics/"+data_set+"-NIA.png")
     total=np.sum(cont_conf)
@@ -139,3 +142,4 @@ for data_set,loc_date in zip(data_sets,loc_dates):
     for j in range(3):
         div=round(cont_conf[j]/total*100,2)
         print(conf_names[j],div)
+    plt.clf()
