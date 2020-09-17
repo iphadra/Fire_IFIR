@@ -62,6 +62,7 @@ for data_set,loc_date in zip(data_sets,loc_dates):
     sum_t=np.zeros(n_data);date_data=[];date_day=[]
     k=0
     print("Calculando suma de incendios")
+    NIA_file=open("../Archivos/"+data_set+"NIA.txt","w")
     for file in files:
         lat,lon=np.loadtxt(dir+file,delimiter=",",skiprows=1,usecols=[0,1],unpack=True)
         conf=np.loadtxt(dir+file,delimiter=",",skiprows=1,usecols=8,dtype=str)
@@ -77,23 +78,25 @@ for data_set,loc_date in zip(data_sets,loc_dates):
             for dlat in range(n_dlat):
                 r_lat=lat_i[0]+(dlat+1)*dg
                 for i in range(n):
-                    #<------------------Conteo de los puntos---------------------->
-                    if r_lat-dg<lat[i]<r_lat and r_lon-dg<lon[i]<r_lon:
-                        count[dlon,dlat]+=1
-                        for j in range(3):
-                            if conf[i]==conf_names[j]:
-                                cont_conf[j]+=1
+                        #<------------------Conteo de los puntos---------------------->
+                        if r_lat-dg<lat[i]<r_lat and r_lon-dg<lon[i]<r_lon:
+                            if conf[i]=="nominal":
+                                count[dlon,dlat]+=1
+                            for j in range(3):
+                                if conf[i]==conf_names[j]:
+                                    cont_conf[j]+=1
 
         sum=np.sum(count)
+        NIA_file.write(str(day)+" "+str(sum)+"\n")
         if k!=0:
             sum_t[k]=sum_t[k-1]+sum
         else:
             sum_t[k]=sum
         if k%day_part==0:
-            date_data=np.append(date_data,str(days+1)+"-"+month_name[month-6])
+            date_data=np.append(date_data,str(days)+"-"+month_name[month-6])
             date_day=np.append(date_day,k)
         elif k==n_data-1:
-            date_data=np.append(date_data,str(days+1)+"-"+month_name[month-6])
+            date_data=np.append(date_data,str(days)+"-"+month_name[month-6])
             date_day=np.append(date_day,k)
         k+=1
         #<-------------------Traslacion de los puntos------------------------------->
@@ -121,6 +124,7 @@ for data_set,loc_date in zip(data_sets,loc_dates):
         plt.ylim(lat_i[0],lat_i[1])
         plt.savefig(str(day)+".png")
         plt.clf()
+    NIA_file.close()
     print("Creando gif")
     duration = 0.5
     filenames = sorted(filter(os.path.isfile, [x for x in os.listdir() if x.endswith(".png")]), key=lambda p: os.path.exists(p) and os.stat(p).st_mtime or time.mktime(datetime.now().timetuple()))
@@ -128,7 +132,7 @@ for data_set,loc_date in zip(data_sets,loc_dates):
     os.system("rm *.png")
     print("Creando grafica de incencios acumulados")
     plt.subplots_adjust(left=0.125,right=0.9,bottom=0.183,top=0.92)
-    plt.plot(np.arange(n_data),sum_t,color="red")
+    plt.plot(np.arange(n_data),sum_t,color="#3e978b")
     plt.ylabel("Número de incendios acumulados")
     plt.xlim(0,date_day[-1])
     plt.xticks(date_day,date_data,rotation=90)
