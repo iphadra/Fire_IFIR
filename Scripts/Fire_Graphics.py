@@ -22,8 +22,8 @@ if days[div[-1]]!=days[-1]:
 for day in days:
     dates=np.append(dates,conse_date(month_names,day))
 plt.subplots_adjust(left=0.121,right=0.952,bottom=0.162,top=0.924)
-plt.scatter(days,n_day,marker=".",c="#3e978b",alpha=0.5)
-plt.plot(days,n_day,color="#3e978b")
+plt.scatter(days,n_day,marker=".",c="#9a031e",alpha=0.5)
+plt.plot(days,n_day,color="#9a031e")
 plt.ylim(0,550)
 plt.ylabel("Número de Incencios")
 plt.xlim(days[0],days[-1]+1)
