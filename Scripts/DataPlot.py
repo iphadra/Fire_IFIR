@@ -56,10 +56,22 @@ def ticks(k,sum_t,sum,date_data,days,month_name,month,date_day):
         date_day=np.append(date_day,k)
     k+=1
     return sum_t,date_data,date_day,k
-
+#
+def number_plot(count,n_dlon,n_dlat,lon_i,lat_i,dg,fig_x,fig_y):
+    for dlon in range(n_dlon):
+        #<-------------------- 1.7 para dejarlo a la mitad------------------------->
+        #<-------------------------Localizacion en x-------------------------->
+        r_lon=lon_i[0]+(dlon+1)*dg*fig_x-dg*fig_x/1.7
+        for dlat in range(n_dlat):
+            #<-------------------------Localizacion en y-------------------------->
+            r_lat=lat_i[0]+(dlat+1)*dg*fig_y-dg*fig_y/1.7
+            if count[dlon,dlat]!=0:
+                #<--------------------------Ploteo del texto-------------------------->
+                plt.text(r_lon,r_lat,str(count[dlon,dlat]),fontsize=12,color="black")
 #data_sets=["viirs","suomi"]
 #loc_dates=[[42,45],[49,52]]
 data_sets=["suomi"]
+#<-----------Columnas donde se encuentran los datos de las coordenasas------------>
 loc_dates=[[49,52]]
 conf_names=["low","nominal","high"]
 cont_conf=np.zeros(3)
@@ -108,15 +120,7 @@ for data_set,loc_date in zip(data_sets,loc_dates):
         sum_t,date_data,date_day,k=ticks(k,sum_t,sum,date_data,days,month_name,month,date_day)
         #<-------------------Traslacion de los puntos------------------------------->
         lon,lat,lon_i,lat_i=tras(lon,lat,lon_i,lat_i,fig_x,fig_y,n)
-        for dlon in range(n_dlon):
-            #<-------------------------Localizacion en x-------------------------->
-            r_lon=lon_i[0]+(dlon+1)*dg*fig_x-dg*fig_x/1.7
-            for dlat in range(n_dlat):
-                #<-------------------------Localizacion en y-------------------------->
-                r_lat=lat_i[0]+(dlat+1)*dg*fig_y-dg*fig_y/1.7
-                if count[dlon,dlat]!=0:
-                    #<--------------------------Ploteo del texto-------------------------->
-                    plt.text(r_lon,r_lat,str(count[dlon,dlat]),fontsize=12,color="black")
+        number_plot(count,n_dlon,n_dlat,lon_i,lat_i,dg,fig_x,fig_y)
         plt.grid(color="black",ls="--")
         lon_i2=[-61,-60];lat_i2=[-33.5,-32.5]
         plt.xlabel("Longitud");plt.ylabel("Latitud ")
