@@ -6,6 +6,7 @@ import math
 import imageio
 import os,sys
 import time
+import moviepy.editor as mp
 #<-------------Funcion para obtener el numero de grillas------------->
 def delimiter(lon,dg):
     dlon=int(math.ceil(abs(lon[1]-lon[0])/dg))
@@ -18,11 +19,11 @@ def date(days):
     day=date.day
     return year,month,day
 #<------------------------Funcion para generar el gif---------------------------->
-def create_gif(filenames, duration,name):
+def create_gif(filenames, duration):
 	images = []
 	for filename in filenames:
 		images.append(imageio.imread(filename))
-	output_file='../Graphics/'+name+'-Fire.gif'
+	output_file='Fire.gif'
 	imageio.mimsave(output_file, images, duration=duration)
 #<---------------------Funcion para trasladar las posiciones--------------------->
 def tras(lon,lat,lon_i,lat_i,fig_x,fig_y,n):
@@ -41,14 +42,30 @@ def redef(lon,lon_i,fig_x,n):
         lon_i[1]=lon_i[0]
         lon_i[0]=aux
     return lon,lon_i
+#<--------------------Funcion para definir las ticks------------------------->
+def ticks(k,sum_t,sum,date_data,days,month_name,month,date_day):
+    if k!=0:
+        sum_t[k]=sum_t[k-1]+sum
+    else:
+        sum_t[k]=sum
+    if k%day_part==0:
+        date_data=np.append(date_data,str(days)+"-"+month_name[month-6])
+        date_day=np.append(date_day,k)
+    elif k==n_data-1:
+        date_data=np.append(date_data,str(days)+"-"+month_name[month-6])
+        date_day=np.append(date_day,k)
+    k+=1
+    return sum_t,date_data,date_day,k
+
 #data_sets=["viirs","suomi"]
 #loc_dates=[[42,45],[49,52]]
 data_sets=["suomi"]
 loc_dates=[[49,52]]
 conf_names=["low","nominal","high"]
 cont_conf=np.zeros(3)
+dir_graphics="../Graphics/"
 #<-------------------------Lectura de la imagen------------------->
-map=plt.imread("../Graphics/map2.png")
+map=plt.imread(dir_graphics+"map2.png")
 month_name=["Jun","Jul","Ag","Sept"]
 day_part=5
 #<----------------------Dimensiones de la imagen-------------------->
@@ -88,17 +105,7 @@ for data_set,loc_date in zip(data_sets,loc_dates):
 
         sum=np.sum(count)
         NIA_file.write(str(day)+" "+str(sum)+"\n")
-        if k!=0:
-            sum_t[k]=sum_t[k-1]+sum
-        else:
-            sum_t[k]=sum
-        if k%day_part==0:
-            date_data=np.append(date_data,str(days)+"-"+month_name[month-6])
-            date_day=np.append(date_day,k)
-        elif k==n_data-1:
-            date_data=np.append(date_data,str(days)+"-"+month_name[month-6])
-            date_day=np.append(date_day,k)
-        k+=1
+        sum_t,date_data,date_day,k=ticks(k,sum_t,sum,date_data,days,month_name,month,date_day)
         #<-------------------Traslacion de los puntos------------------------------->
         lon,lat,lon_i,lat_i=tras(lon,lat,lon_i,lat_i,fig_x,fig_y,n)
         for dlon in range(n_dlon):
@@ -128,8 +135,11 @@ for data_set,loc_date in zip(data_sets,loc_dates):
     print("Creando gif")
     duration = 0.5
     filenames = sorted(filter(os.path.isfile, [x for x in os.listdir() if x.endswith(".png")]), key=lambda p: os.path.exists(p) and os.stat(p).st_mtime or time.mktime(datetime.now().timetuple()))
-    create_gif(filenames, duration,data_set)
+    create_gif(filenames, duration)
     os.system("rm *.png")
+    clip = mp.VideoFileClip('Fire.gif')
+    os.system("rm *.gif")
+    clip.write_videofile(dir_graphics+data_set+"-movie.mp4")
     print("Creando grafica de incencios acumulados")
     plt.subplots_adjust(left=0.125,right=0.9,bottom=0.183,top=0.92)
     plt.plot(np.arange(n_data),sum_t,color="#3e978b")
