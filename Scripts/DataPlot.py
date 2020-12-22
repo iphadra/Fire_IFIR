@@ -73,12 +73,15 @@ def number_plot(count,n_dlon,n_dlat,lon_i,lat_i,dg,fig_x,fig_y):
 data_sets=["suomi"]
 #<-----------Columnas donde se encuentran los datos de las coordenasas------------>
 loc_dates=[[49,52]]
+#<---------------------------Tipos de datos---------------------->
 conf_names=["low","nominal","high"]
+#<--------------------------Inicializar conteo------------------>
 cont_conf=np.zeros(3)
 dir_graphics="../Graphics/"
 #<-------------------------Lectura de la imagen------------------->
 map=plt.imread(dir_graphics+"map2.png")
 month_name=["Jun","Jul","Ag","Sept"]
+#<--------------------Division de dias en las graficas----------------->
 day_part=5
 #<----------------------Dimensiones de la imagen-------------------->
 fig_x,fig_y=360.5,358.5
