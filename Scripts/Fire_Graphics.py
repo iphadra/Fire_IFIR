@@ -13,7 +13,7 @@ def conse_date(names,days):
     date=day+"-"+names[month-6]
     return date
 dir_files="../Archivos/";dir_Graphics="../Graphics/"
-month_names=["Jun","Jul","Ag"]
+month_names=["Jun","Jul","Ag","Sept"]
 days,n_day=np.loadtxt(dir_files+"suomiNIA.txt",unpack=True)
 dates=[]
 div=np.arange(0,np.size(days),6)
