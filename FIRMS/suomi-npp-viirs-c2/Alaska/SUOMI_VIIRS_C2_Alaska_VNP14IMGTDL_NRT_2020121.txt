@@ -1,0 +1,4 @@
+latitude,longitude,bright_ti4,scan,track,acq_date,acq_time,satellite,confidence,version,bright_ti5,frp,daynight
+63.97918,-145.66016,326.7,0.43,0.38,2020-04-30,21:30,N,nominal,1.0NRT,283.9,2.4,D
+63.98724,-145.65897,345.5,0.43,0.38,2020-04-30,21:30,N,nominal,1.0NRT,287.3,7.9,D
+63.99044,-145.6624,329.7,0.43,0.38,2020-04-30,21:30,N,nominal,1.0NRT,281,2.3,D
