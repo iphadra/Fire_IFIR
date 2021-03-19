@@ -43,22 +43,22 @@ for file in files:
         file, dir_data, lon_division, lat_division, lon_n, lat_n, cont_conf, conf_names, loc_dates)
     # <-------------Suma de los fuegos en el dia-------------->
     sum = np.sum(count)
-    #<-----------------Escritura de los fuegos en el dia---------->
+    # <-----------------Escritura de los fuegos en el dia---------->
     NIA_file.write(str(conse_day)+","+str(sum)+"\n")
     # <-------------------Traslacion de los puntos------------------------------->
     lon = tras(lon, parameters["lon"], parameters["fig_x"])
     lat = tras(lat, parameters["lat"], parameters["fig_y"])
-    #<---------------------Pĺoteo del numero de fuegos por grilla--------------->
+    # <---------------------Pĺoteo del numero de fuegos por grilla--------------->
     number_plot(lon_division_tras, lat_division_tras, count)
-    #<---------------Extraccion del dia a partir del día consecutivo----------->
+    # <---------------Extraccion del dia a partir del día consecutivo----------->
     year, month, days = consecutive2yymmdd(conse_day)
     date = str(days)+"-"+str(month)+"-"+str(year)
     name = str(conse_day)
-    #<-----------------------Ploteo de los fuegos--------------------->
+    # <-----------------------Ploteo de los fuegos--------------------->
     plot_points(lon, lat)
-    #<--------------------------Ploteo del mapa-------------------->
+    # <--------------------------Ploteo del mapa-------------------->
     plot_map(map, date, sum, lon_division, lat_division,
-             lon_division_tras, lat_division_tras, name,path=dir_graphics)
+             lon_division_tras, lat_division_tras, name, path=dir_graphics)
 NIA_file.close()
 create_gif(path=dir_graphics)
 movie_maker(path=dir_graphics)
