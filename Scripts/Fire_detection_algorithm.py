@@ -155,11 +155,6 @@ class Fire:
                         daily_points_file.write("{:.5f},{:.5f},{}\n".format(self.data["longitude"][data_i],
                                                                             self.data["latitude"][data_i],
                                                                             self.data["confidence"][data_i]))
-                        if self.data["confidence"][data_i] == "nominal":
-                            self.count[lon_i, lat_i] += 1
-                        # for j in range(3):
-                        #     self.conf_count[j] = np.size(
-                        #         conf[conf == conf_names[j]])
         daily_points_file.close()
 
     def read_data_from_each_file(self, name, path):
